@@ -1,0 +1,89 @@
+\documentclass[twoside]{scrartcl}
+\input \jobname
+
+\usepackage{freitag}
+\usepackage{tikz}
+\usepackage{color}
+\usepackage{calc}
+
+\usetikzlibrary{shapes.multipart}
+
+\newlength{\rowhight}
+\setlength{\rowhight}{7.5mm}
+
+\definecolor{anti-flashwhite}{rgb}{0.95, 0.95, 0.96}
+\definecolor{lgray}{gray}{0.75}
+
+\renewcommand{\arraystretch}{1.17}
+\renewcommand{\familydefault}{\sfdefault}
+
+\newcommand{\fromright}[1]{\width-\margin-\margininner-#1}
+\newcommand{\fromtop}[1]{\height-\margin-\margin-#1}
+
+\newcommand*{\grayline}{%
+    \arrayrulecolor{anti-flashwhite}
+    \cline{1-3}
+    \arrayrulecolor{black}
+}
+\newcommand{\textbox}[1]{%
+    \parbox{3.5cm}{#1}%
+}
+
+\newcommand{\sotapage}[3]{%
+  \begin{tikzpicture}[
+      gray,
+      ultra thin,
+      field/.style={
+        anchor=south west,
+        minimum height=\rowhight,
+        rectangle,
+      },
+      time/.style={field, minimum width=17.5mm, black},
+      report/.style={field, minimum width=11mm, black!10},
+      title/.style={
+        anchor=north west,
+        minimum width=\fromright{0},
+        text width=\fromright{1em},
+        rectangle split,
+        rectangle split parts=2,
+        black,
+      },
+    ]
+
+  \node at (0,\fromtop{0}) [title] {%
+    \Huge\textcolor{lgray}{#1}%
+        \hfill%
+        \textcolor{lgray}{#2}\,/\,%
+        \textcolor{lgray}{AA}\,-\,%
+        \textcolor{lgray}{00}%
+      \nodepart{second}%
+        \Large\textcolor{lgray}{0000}\,.\,%
+        \textcolor{lgray}{0000} MHz \hfill %
+        \textcolor{lgray}{#3} \hfill %
+        \textcolor{lgray}{1000}\,W};
+
+  \foreach \T [count=\r] in {17,...,9} {
+    \draw [loosely dashed] (0,\r*2\rowhight) -- %
+        (\fromright{0},\r*2\rowhight);
+    \draw [loosely dotted, thin] (17.5mm,\r*2\rowhight+\rowhight) -- %
+        (\fromright{0},\r*2\rowhight+\rowhight);
+    \node at (0,\r*2\rowhight+\rowhight) [time] {\Large :};
+    \node at (\fromright{14mm},\r*2\rowhight+\rowhight)[report]{%
+        \Large\textcolor{lgray}{\T:00}};
+  }
+
+  \draw [loosely dashed] (0,0) rectangle (%
+    \fromright{0},20\rowhight);
+  \draw [loosely dotted, thin] (17.5mm,0) -- %
+    (17.5mm,20\rowhight);
+  \end{tikzpicture}
+} % sotapage
+
+\begin{document}
+    \pagestyle{empty}%
+    \enlargethispage{\margin}%
+    \sotapage{\dayA}{\dateA}{\dayOfWeekA}%
+    \sotapage{\dayB}{\dateB}{\dayOfWeekB}%
+    \sotapage{\dayC}{\dateC}{\dayOfWeekC}%
+    \sotapage{\dayD}{\dateD}{\dayOfWeekD}%
+\end{document}

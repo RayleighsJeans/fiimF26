@@ -1,0 +1,13 @@
+\def\pageName{./pdf/2025-01-09.txt.pdf}
+\def\dayA{2025-01-09}
+\def\dateA{Jan, 9}
+\def\dayOfWeekA{Thu}
+\def\dayB{2025-01-10}
+\def\dateB{Jan, 10}
+\def\dayOfWeekB{Fri}
+\def\dayC{2025-01-11}
+\def\dateC{Jan, 11}
+\def\dayOfWeekC{Sat}
+\def\dayD{2025-01-12}
+\def\dateD{Jan, 12}
+\def\dayOfWeekD{Sun}

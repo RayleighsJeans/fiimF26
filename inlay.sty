@@ -1,0 +1,36 @@
+%!TEX encoding = UTF-8 Unicode
+\ProvidesPackage{inlay}
+
+% Fonts
+% -----
+\RequirePackage{ifxetex}
+
+\ifxetex
+  \RequirePackage{fontspec}
+  \RequirePackage{xltxtra}
+  \RequirePackage{xunicode}
+\else
+  \RequirePackage[utf8]{inputenc}
+  \RequirePackage[T1]{fontenc}
+\fi
+
+% Titlepage
+% ---------
+\RequirePackage{hyperref}
+\RequirePackage{pdfpages}
+\RequirePackage{gitinfo2}
+\RequirePackage[
+  type={CC},
+  modifier={by-sa},
+  version={4.0},
+]{doclicense}
+
+\newcommand{\inlay}[1]{%
+  \includepdf[%
+    angle=90,%
+    noautoscale=true,%
+    nup=1x2,%
+    booklet=true,%
+    pages=-%
+    ]{#1}
+}

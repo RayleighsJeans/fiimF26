@@ -1,0 +1,13 @@
+\def\pageName{./pdf/2025-09-30.txt.pdf}
+\def\dayA{2025-09-30}
+\def\dateA{Sep, 30}
+\def\dayOfWeekA{Tue}
+\def\dayB{2025-10-01}
+\def\dateB{Oct, 1}
+\def\dayOfWeekB{Wed}
+\def\dayC{2025-10-02}
+\def\dateC{Oct, 2}
+\def\dayOfWeekC{Thu}
+\def\dayD{2025-10-03}
+\def\dateD{Oct, 3}
+\def\dayOfWeekD{Fri}
