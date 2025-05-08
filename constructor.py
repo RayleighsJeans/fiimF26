@@ -65,9 +65,11 @@ for d in dates:
 
     if i == 3:
         i = 0
-        os.system('pdflatex -interaction=batchmode -jobname=' + file_name + ' agendaPage.tex')
+        for k in range(2):
+            os.system('pdflatex -interaction=batchmode -jobname=' + file_name + ' agendaPage.tex')
         os.system('cp ' + page_name + '.pdf pdf/.')
-        os.system('pdflatex -interaction=batchmode -jobname=' + file_name + ' agenda.tex')
+        for k in range(2):
+            os.system('pdflatex -interaction=batchmode -jobname=' + file_name + ' agenda.tex')
     else:
         i += 1
 
@@ -75,10 +77,14 @@ merger = PdfMerger()
 for i in range(5):
     merger.append(
         PdfReader(os.path.join(eg_dir, 'gridded.pdf'), 'rb'))
+    merger.append(
+        PdfReader(os.path.join(eg_dir, 'dotted.pdf'), 'rb'))
 pdf_files = sorted([f for f in os.listdir(files_dir) if f.endswith('pdf')])
 for f in pdf_files:
     merger.append(PdfReader(os.path.join(files_dir, f), 'rb'))
 for i in range(5):
     merger.append(
         PdfReader(os.path.join(eg_dir, 'gridded.pdf'), 'rb'))
+    merger.append(
+        PdfReader(os.path.join(eg_dir, 'dotted.pdf'), 'rb'))
 merger.write(output_file)

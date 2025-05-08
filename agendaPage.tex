@@ -12,7 +12,7 @@
 \setlength{\rowhight}{7.5mm}
 
 \definecolor{anti-flashwhite}{rgb}{0.95, 0.95, 0.96}
-\definecolor{lgray}{gray}{0.75}
+\definecolor{lgray}{gray}{0.66}
 
 \renewcommand{\arraystretch}{1.17}
 \renewcommand{\familydefault}{\sfdefault}
@@ -63,18 +63,18 @@
         \textcolor{lgray}{1000}\,W};
 
   \foreach \T [count=\r] in {17,...,9} {
-    \draw [loosely dashed] (0,\r*2\rowhight) -- %
+    \draw [dashed] (0,\r*2\rowhight) -- %
         (\fromright{0},\r*2\rowhight);
-    \draw [loosely dotted, thin] (17.5mm,\r*2\rowhight+\rowhight) -- %
+    \draw [dotted, thick] (17.5mm,\r*2\rowhight+\rowhight) -- %
         (\fromright{0},\r*2\rowhight+\rowhight);
     \node at (0,\r*2\rowhight+\rowhight) [time] {\Large :};
     \node at (\fromright{14mm},\r*2\rowhight+\rowhight)[report]{%
         \Large\textcolor{lgray}{\T:00}};
   }
 
-  \draw [loosely dashed] (0,0) rectangle (%
+  \draw [dashed] (0,0) rectangle (%
     \fromright{0},20\rowhight);
-  \draw [loosely dotted, thin] (17.5mm,0) -- %
+  \draw [dotted, thick] (17.5mm,0) -- %
     (17.5mm,20\rowhight);
   \end{tikzpicture}
 } % sotapage
@@ -86,4 +86,5 @@
     \sotapage{\dayB}{\dateB}{\dayOfWeekB}%
     \sotapage{\dayC}{\dateC}{\dayOfWeekC}%
     \sotapage{\dayD}{\dateD}{\dayOfWeekD}%
+    \let\clearpage\relax%
 \end{document}
