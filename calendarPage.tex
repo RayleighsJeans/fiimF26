@@ -1,0 +1,115 @@
+\documentclass[%
+  landscape,%
+  %a4paper,%
+  twoside%
+  %10pt
+]{scrartcl}
+\input \jobname
+
+\usepackage{tikz}
+\usepackage[%
+    landscape,%
+    margin=0.5in,%
+    nofoot%
+]{geometry}
+
+\usetikzlibrary{calc}
+\usetikzlibrary{calendar}
+
+\usepackage[tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+
+\renewcommand*\familydefault{\sfdefault}
+
+\def\termin#1#2{%
+  \node [anchor=north east,text width=1.5cm,align=right] at
+    (cal-#1.north east){#2};
+}
+
+\begin{document}%
+\pagestyle{empty}%
+\begin{minipage}[b]{0.45\textwidth}%
+\small{\year}\\%
+\begin{tikzpicture}[every day/.style={anchor = north east}]
+\calendar[
+  dates=\firstDateL to \lastDateL,
+  name=cal,
+  day yshift = 3em,
+  day code=
+  {
+    \node[name=\pgfcalendarsuggestedname,every day,shape=rectangle,
+    minimum height= .53cm, text width = 4.4cm, draw = gray]{\tikzdaytext};
+    \draw (-1.8cm, -.1ex) node[anchor = west]{\footnotesize%
+      \pgfcalendarweekdayshortname{\pgfcalendarcurrentweekday}};
+  },
+  execute before day scope=
+  {
+    \ifdate{day of month=1}
+    {
+      \pgftransformxshift{4.8cm}
+      \draw (0,0)node [shape=rectangle, minimum height= .53cm,
+        text width = 4.4cm, fill = gray, text= white, draw = gray, text centered]
+        {\textbf{\pgfcalendarmonthname{\pgfcalendarcurrentmonth}}};
+    }{}
+    \ifdate{workday}
+    {
+      \tikzset{every day/.style={fill=white}}
+    }{}
+    \ifdate{Saturday}{\tikzset{every day/.style={fill=gray!10}}}{}
+    \ifdate{Sunday}{\tikzset{every day/.style={fill=gray!20}}}{}
+  },
+ execute at begin day scope=
+  {
+    \pgftransformyshift{-.53*\pgfcalendarcurrentday cm}
+  }
+];%
+%
+\foreach \month/\Mo/\label in \weekSetL {%
+  \termin{\year-\month-\Mo}{\label}}%
+\end{tikzpicture}%
+\end{minipage}%
+%
+\hfill%
+%
+\begin{minipage}[b]{0.45\textwidth}%
+\small{\year}\\%
+\begin{tikzpicture}[every day/.style={anchor = north east}]
+\calendar[
+  dates=\firstDateR to \lastDateR,
+  name=cal,
+  day yshift = 3em,
+  day code=
+  {
+    \node[name=\pgfcalendarsuggestedname,every day,shape=rectangle,
+    minimum height= .53cm, text width = 4.4cm, draw = gray]{\tikzdaytext};
+    \draw (-1.8cm, -.1ex) node[anchor = west]{\footnotesize%
+      \pgfcalendarweekdayshortname{\pgfcalendarcurrentweekday}};
+  },
+  execute before day scope=
+  {
+    \ifdate{day of month=1}
+    {
+      \pgftransformxshift{4.8cm}
+      \draw (0,0)node [shape=rectangle, minimum height= .53cm,
+        text width = 4.4cm, fill = gray, text= white, draw = gray, text centered]
+        {\textbf{\pgfcalendarmonthname{\pgfcalendarcurrentmonth}}};
+    }{}
+    \ifdate{workday}
+    {
+      \tikzset{every day/.style={fill=white}}
+    }{}
+    \ifdate{Saturday}{\tikzset{every day/.style={fill=gray!10}}}{}
+    \ifdate{Sunday}{\tikzset{every day/.style={fill=gray!20}}}{}
+  },
+ execute at begin day scope=
+  {
+    \pgftransformyshift{-.53*\pgfcalendarcurrentday cm}
+  }
+];%
+%
+\foreach \month/\Mo/\label in \weekSetR {%
+  \termin{\year-\month-\Mo}{\label}}%
+\end{tikzpicture}%
+\end{minipage}%
+\end{document}

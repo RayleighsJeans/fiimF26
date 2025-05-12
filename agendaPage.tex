@@ -29,7 +29,9 @@
     \parbox{3.5cm}{#1}%
 }
 
-\newcommand{\sotapage}[3]{%
+\newcommand{\sotapage}[5]{%
+  \setcounter{page}{#5}%
+
   \begin{tikzpicture}[
       gray,
       ultra thin,
@@ -60,7 +62,7 @@
         \Large\textcolor{lgray}{0000}\,.\,%
         \textcolor{lgray}{0000} MHz \hfill %
         \textcolor{lgray}{#3} \hfill %
-        \textcolor{lgray}{1000}\,W};
+        \textcolor{lgray}W\,\,{#4}};
 
   \foreach \T [count=\r] in {17,...,9} {
     \draw [dashed] (0,\r*2\rowhight) -- %
@@ -82,9 +84,9 @@
 \begin{document}
     \pagestyle{empty}%
     \enlargethispage{\margin}%
-    \sotapage{\dayA}{\dateA}{\dayOfWeekA}%
-    \sotapage{\dayB}{\dateB}{\dayOfWeekB}%
-    \sotapage{\dayC}{\dateC}{\dayOfWeekC}%
-    \sotapage{\dayD}{\dateD}{\dayOfWeekD}%
+    \sotapage{\dayA}{\dateA}{\dayOfWeekA}{\weekA}{\pageA}%
+    \sotapage{\dayB}{\dateB}{\dayOfWeekB}{\weekB}{\pageB}%
+    \sotapage{\dayC}{\dateC}{\dayOfWeekC}{\weekC}{\pageC}%
+    \sotapage{\dayD}{\dateD}{\dayOfWeekD}{\weekD}{\pageD}%
     \let\clearpage\relax%
 \end{document}
