@@ -23,19 +23,32 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-eg_dir = '_eg'
+output_file = 'final/output.pdf'
 calendar_base = 'tmp/calendar'
-files_dir = 'tmp'
-output_file = 'output.pdf'
+
+eg_dir = './_eg'
+files_dir = './tmp'
 pdf_dir = './pdf'
+final_dir = './final'
+
 
 # Cleanup everything before generation.
-if args.mode in ['day', 'week']:
-    shutil.rmtree(files_dir, ignore_errors=True)
-    os.makedirs(files_dir)
-    shutil.rmtree(pdf_dir, ignore_errors=True)
-    os.makedirs(pdf_dir)
+def cleanup(mode: str = 'day') -> None:
+    if mode in ['day', 'week', 'calendar']:
+        if os.path.exists(files_dir):
+            shutil.rmtree(files_dir, ignore_errors=True)
+        if os.path.exists(pdf_dir):
+            shutil.rmtree(pdf_dir, ignore_errors=True)
 
+    if not os.path.exists(files_dir):
+        os.makedirs(files_dir)
+    if not os.path.exists(pdf_dir):
+        os.makedirs(pdf_dir)
+    if not os.path.exists(final_dir):
+        os.makedirs(final_dir)
+
+
+cleanup(mode=args.mode)
 with open('config.json') as config_file:
     config = json.load(config_file)
 
@@ -97,9 +110,11 @@ if args.mode == 'week':
         # Copy the generated PDF to the pdf directory with correct path
         os.system('cp ' + file_name + '.pdf pdf/.')
 
-
     print(f'Building weekly inlay...')
-    os.system('pdflatex -interaction=batchmode -jobname=' + file_name + ' agendaWeek.tex' + '> /dev/null 2>&1')
+    for k in range(2):
+        os.system('pdflatex -interaction=batchmode -jobname=' + file_name + ' agendaWeek.tex' + '> /dev/null 2>&1')
+    os.system('cp ' + file_name + '.pdf final/.')
+
 
 elif args.mode == 'day':
     # Daily mode: original 4 days per page logic
@@ -151,11 +166,13 @@ elif args.mode == 'day':
             os.system('cp ' + page_name + '.pdf pdf/.')
             for k in range(2):
                 os.system('pdflatex -interaction=batchmode -jobname=' + file_name + ' agenda.tex' + '> /dev/null 2>&1')
+            os.system('cp ' + file_name + '.pdf final/.')
         else:
             i += 1
 
 elif args.mode == 'calendar':
-    print(f"Generating agenda calendar (portrait, 4 days per page)")
+    print(f"Generating agenda calendar (landscape, 4 months per page)")
+
     # Generate calendar.
     calendar_first = parse(config['calendar_first'], dayfirst=True).date()
     calendar_last = parse(config['calendar_last'], dayfirst=True).date()
@@ -191,13 +208,13 @@ elif args.mode == 'calendar':
             with open(calendar_base + str(i) + str(int(thisMonthSet)) + '.txt', 'ab') as f:
                 if month_sets[month] - thisMonthSet < 1 and month != 'Jan':
                     if month == 'Nov':
-                        f.write(bytes('\\def\\year{' + str(d.year) + '}\n', 'UTF-8'))
+                        f.write(bytes('\\def\\thisYear{' + str(d.year) + '}\n', 'UTF-8'))
                     f.write(bytes('\\def\\lastDateL{' + str(lastDate) + '}\n', 'UTF-8'))
                     f.write(bytes('\\def\\firstDateL{' + str(firstDate) + '}\n', 'UTF-8'))
                     f.write(bytes('\\def\\weekSetL{' + weekList + '}\n', 'UTF-8'))
                 else:
                     if month != 'Jan':
-                        f.write(bytes('\\def\\year{' + str(d.year) + '}\n', 'UTF-8'))
+                        f.write(bytes('\\def\\thisYear{' + str(d.year) + '}\n', 'UTF-8'))
                     f.write(bytes('\\def\\firstDateR{' + str(firstDate) + '}\n', 'UTF-8'))
                     f.write(bytes('\\def\\lastDateR{' + str(lastDate) + '}\n', 'UTF-8'))
                     f.write(bytes('\\def\\weekSetR{' + weekList + '}\n', 'UTF-8'))
@@ -212,6 +229,11 @@ elif args.mode == 'calendar':
 
     for k in ['01', '03', '05', '11', '13', '15']:
         os.system('pdflatex -interaction=batchmode -jobname=' + calendar_base + k + '.txt' + ' calendarPage.tex' + '> /dev/null 2>&1')
+        os.system('cp ' + calendar_base + k + '.txt.pdf pdf/.')
+
+    print(f'Building calendar inlay...')
+    os.system('pdflatex -interaction=batchmode -jobname=' + calendar_base + '01.txt agendaCalendar.tex' + '> /dev/null 2>&1')
+    os.system('cp ' + calendar_base + '01.txt.pdf final/.')
 
 
 elif args.mode == 'merge':
@@ -222,9 +244,9 @@ elif args.mode == 'merge':
         merger.append(
             PdfReader(os.path.join(eg_dir, 'dotted.pdf'), 'rb'))
 
-    pdf_files = sorted([f for f in os.listdir(files_dir) if f.endswith('pdf')])
+    pdf_files = sorted([f for f in os.listdir(final_dir) if f.endswith('pdf')])
     for f in pdf_files:
-        merger.append(PdfReader(os.path.join(files_dir, f), 'rb'))
+        merger.append(PdfReader(os.path.join(final_dir, f), 'rb'))
 
     for i in range(3):
         merger.append(
@@ -232,3 +254,4 @@ elif args.mode == 'merge':
         merger.append(
             PdfReader(os.path.join(eg_dir, 'dotted.pdf'), 'rb'))
     merger.write(output_file)
+    cleanup()
